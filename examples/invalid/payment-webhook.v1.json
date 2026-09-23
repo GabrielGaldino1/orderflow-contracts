@@ -1,0 +1,12 @@
+{
+  "type": "payment.status.changed",
+  "version": 1,
+  "occurredAt": "2026-09-13T20:00:04Z",
+  "data": {
+    "paymentId": "44444444-4444-4444-8444-444444444444",
+    "externalPaymentId": "ext_pay_001",
+    "status": "DECLINED",
+    "amount": "259.90",
+    "currency": "BRL"
+  }
+}

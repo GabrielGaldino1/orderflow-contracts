@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orderflow.dev/schemas/payment/payment-approved.v1.schema.json",
+  "title": "PaymentApproved.v1",
+  "allOf": [
+    { "$ref": "../common/event-envelope.v1.schema.json" },
+    {
+      "properties": {
+        "eventType": { "const": "PaymentApproved" },
+        "eventVersion": { "const": 1 },
+        "producer": { "const": "payment-worker" },
+        "payload": { "$ref": "#/$defs/payload" }
+      }
+    }
+  ],
+  "$defs": {
+    "amount": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,11})\\.[0-9]{2}$"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orderId", "paymentId", "externalPaymentId", "amount", "currency", "approvedAt"],
+      "properties": {
+        "orderId": { "type": "string", "format": "uuid" },
+        "paymentId": { "type": "string", "format": "uuid" },
+        "externalPaymentId": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "amount": { "$ref": "#/$defs/amount" },
+        "currency": { "const": "BRL" },
+        "approvedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

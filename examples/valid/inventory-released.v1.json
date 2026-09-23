@@ -1,0 +1,19 @@
+{
+  "eventId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa5",
+  "eventType": "InventoryReleased",
+  "eventVersion": 1,
+  "occurredAt": "2026-09-13T20:00:06Z",
+  "correlationId": "11111111-1111-4111-8111-111111111111",
+  "causationId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4",
+  "aggregateId": "33333333-3333-4333-8333-333333333333",
+  "producer": "inventory-worker",
+  "payload": {
+    "reservationId": "33333333-3333-4333-8333-333333333333",
+    "orderId": "11111111-1111-4111-8111-111111111111",
+    "releasedAt": "2026-09-13T20:00:06Z",
+    "releasedItems": [
+      { "productId": "22222222-2222-4222-8222-222222222221", "quantity": 2 },
+      { "productId": "22222222-2222-4222-8222-222222222222", "quantity": 1 }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "eventId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4",
+  "eventType": "InventoryReleaseRequested",
+  "eventVersion": 1,
+  "occurredAt": "2026-09-13T20:00:05Z",
+  "correlationId": "11111111-1111-4111-8111-111111111111",
+  "causationId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa9",
+  "aggregateId": "33333333-3333-4333-8333-333333333333",
+  "producer": "order-service",
+  "payload": {
+    "orderId": "11111111-1111-4111-8111-111111111111"
+  }
+}

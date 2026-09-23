@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orderflow.dev/schemas/inventory/inventory-release-requested.v1.schema.json",
+  "title": "InventoryReleaseRequested.v1",
+  "allOf": [
+    { "$ref": "../common/event-envelope.v1.schema.json" },
+    {
+      "properties": {
+        "eventType": { "const": "InventoryReleaseRequested" },
+        "eventVersion": { "const": 1 },
+        "producer": { "const": "order-service" },
+        "payload": { "$ref": "#/$defs/payload" }
+      }
+    }
+  ],
+  "$defs": {
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reservationId", "orderId"],
+      "properties": {
+        "reservationId": { "type": "string", "format": "uuid" },
+        "orderId": { "type": "string", "format": "uuid" }
+      }
+    }
+  }
+}
