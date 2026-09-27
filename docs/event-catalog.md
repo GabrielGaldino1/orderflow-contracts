@@ -14,12 +14,12 @@ The catalog is a source contract. It does not prescribe Java DTO packages or all
 
 | Topic | Producer | Consumer group | Message types |
 |---|---|---|---|
-| `orderflow.inventory.commands` | `order-service` | `inventory-worker` | `InventoryReservationRequested`, `InventoryReleaseRequested` |
-| `orderflow.inventory.events` | `inventory-worker` | `order-service-inventory-events` | `InventoryReserved`, `InventoryRejected`, `InventoryReleased` |
-| `orderflow.payment.commands` | `order-service` | `payment-worker` | `PaymentRequested` |
-| `orderflow.payment.events` | `payment-worker` | `order-service-payment-events` | `PaymentPending`, `PaymentApproved`, `PaymentDeclined` |
+| `orderflow-inventory-commands` | `order-service` | `inventory-worker` | `InventoryReservationRequested`, `InventoryReleaseRequested` |
+| `orderflow-inventory-events` | `inventory-worker` | `order-service-inventory-events` | `InventoryReserved`, `InventoryRejected`, `InventoryReleased` |
+| `orderflow-payment-commands` | `order-service` | `payment-worker` | `PaymentRequested` |
+| `orderflow-payment-events` | `payment-worker` | `order-service-payment-events` | `PaymentPending`, `PaymentApproved`, `PaymentDeclined` |
 
-Every record uses `orderId` as its Kafka key. Initial partition counts and retention periods remain deployment decisions. DLQ topics append `.dlq` to the source topic name.
+Every record uses `orderId` as its Kafka key. Initial partition counts and retention periods remain deployment decisions. Topic names use hyphens exclusively as separators, and DLQ topics append `-dlq` to the source topic name.
 
 ## 3. Common envelope
 
@@ -72,7 +72,7 @@ The Kafka key is transport metadata and is not duplicated as a special envelope 
 | Classification | Command |
 | Producer | `order-service` |
 | Consumer | `inventory-worker` |
-| Topic | `orderflow.inventory.commands` |
+| Topic | `orderflow-inventory-commands` |
 | Aggregate | Order (`aggregateId = orderId`) |
 | Trigger | An order is created and enters `INVENTORY_PENDING`. |
 
@@ -89,7 +89,7 @@ Possible outcomes: `InventoryReserved.v1` or `InventoryRejected.v1`.
 | Classification | Domain event |
 | Producer | `inventory-worker` |
 | Consumer | `order-service` |
-| Topic | `orderflow.inventory.events` |
+| Topic | `orderflow-inventory-events` |
 | Aggregate | Reservation (`aggregateId = reservationId`) |
 | Trigger | All requested quantities were reserved atomically. |
 
@@ -102,7 +102,7 @@ Reports the generated `reservationId`, related `orderId`, all reserved items and
 | Classification | Domain event |
 | Producer | `inventory-worker` |
 | Consumer | `order-service` |
-| Topic | `orderflow.inventory.events` |
+| Topic | `orderflow-inventory-events` |
 | Aggregate | Order (`aggregateId = orderId`) |
 | Trigger | One or more requested products cannot be reserved. |
 
@@ -115,7 +115,7 @@ Reports every rejected item with its requested quantity. The initial normalized 
 | Classification | Compensation command |
 | Producer | `order-service` |
 | Consumer | `inventory-worker` |
-| Topic | `orderflow.inventory.commands` |
+| Topic | `orderflow-inventory-commands` |
 | Aggregate | Reservation (`aggregateId = reservationId`) |
 | Trigger | Payment is definitively declined after inventory was reserved. |
 
@@ -130,7 +130,7 @@ An already released reservation is an idempotent duplicate. A reservation that n
 | Classification | Domain event |
 | Producer | `inventory-worker` |
 | Consumer | `order-service` |
-| Topic | `orderflow.inventory.events` |
+| Topic | `orderflow-inventory-events` |
 | Aggregate | Reservation (`aggregateId = reservationId`) |
 | Trigger | An active reservation is released. |
 
@@ -145,7 +145,7 @@ Reports the reservation, order and released items. The orchestrator accepts it o
 | Classification | Command |
 | Producer | `order-service` |
 | Consumer | `payment-worker` |
-| Topic | `orderflow.payment.commands` |
+| Topic | `orderflow-payment-commands` |
 | Aggregate | Order (`aggregateId = orderId`) |
 | Trigger | Inventory is reserved and the order enters `PAYMENT_PENDING`. |
 
@@ -158,7 +158,7 @@ Carries `orderId`, `reservationId`, decimal `amount`, ISO currency and an opaque
 | Classification | Domain event |
 | Producer | `payment-worker` |
 | Consumer | `order-service` |
-| Topic | `orderflow.payment.events` |
+| Topic | `orderflow-payment-events` |
 | Aggregate | Payment (`aggregateId = paymentId`) |
 | Trigger | The provider accepted the request but did not return a final result. |
 
@@ -171,7 +171,7 @@ Reports internal and external payment identifiers. The order remains `PAYMENT_PE
 | Classification | Domain event |
 | Producer | `payment-worker` |
 | Consumer | `order-service` |
-| Topic | `orderflow.payment.events` |
+| Topic | `orderflow-payment-events` |
 | Aggregate | Payment (`aggregateId = paymentId`) |
 | Trigger | Immediate provider response or valid webhook confirms approval. |
 
@@ -184,7 +184,7 @@ Reports the final approved amount and currency. The orchestrator verifies them a
 | Classification | Domain event |
 | Producer | `payment-worker` |
 | Consumer | `order-service` |
-| Topic | `orderflow.payment.events` |
+| Topic | `orderflow-payment-events` |
 | Aggregate | Payment (`aggregateId = paymentId`) |
 | Trigger | Immediate provider response or valid webhook confirms decline. |
 
